@@ -1,0 +1,11 @@
+{
+  "lastname": "Smith",
+  "name": "John",
+  "timmeZone": -18000,
+  "offfSet": "",
+  "fullName": "John Smith",
+  "temperatureCelcius": 23,
+  "dateTime": "2019-12-24T05:48:53Z",
+  "city": "Melbourne",
+  "location": "Melbourne,Australia"
+}

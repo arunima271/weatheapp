@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:mock="http://www.mulesoft.org/schema/mule/mock" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd">
+    <munit:config name="munit" doc:name="MUnit configuration" mock-connectors="false" mock-inbounds="false"/>
+    <spring:beans>
+        <spring:import resource="classpath:mule-weather-details-api.xml"/>
+        <spring:import resource="classpath:common.xml"/>
+    </spring:beans>
+    <munit:test name="mule-weather-details-api-test-suite-success" description="Test" ignore="true">
+        <mock:when doc:name="Mock-HTTP Requester" messageProcessor=".*:.*">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['getWeatherDetails']"/>
+            </mock:with-attributes>
+            <mock:then-return payload="{&quot;coord&quot;:{&quot;lon&quot;:-81.14,&quot;lat&quot;:22.5},&quot;weather&quot;:[{&quot;id&quot;:803,&quot;main&quot;:&quot;Clouds&quot;,&quot;description&quot;:&quot;broken clouds&quot;,&quot;icon&quot;:&quot;04n&quot;}],&quot;base&quot;:&quot;stations&quot;,&quot;main&quot;:{&quot;temp&quot;:23,&quot;feels_like&quot;:27.19,&quot;temp_min&quot;:23,&quot;temp_max&quot;:23,&quot;pressure&quot;:1015,&quot;humidity&quot;:100},&quot;visibility&quot;:8000,&quot;wind&quot;:{&quot;speed&quot;:1.5,&quot;deg&quot;:150},&quot;clouds&quot;:{&quot;all&quot;:75},&quot;dt&quot;:1577072445,&quot;sys&quot;:{&quot;type&quot;:1,&quot;id&quot;:7254,&quot;country&quot;:&quot;CU&quot;,&quot;sunrise&quot;:1577016026,&quot;sunset&quot;:1577054737},&quot;timezone&quot;:-18000,&quot;id&quot;:3556437,&quot;name&quot;:&quot;Australia&quot;,&quot;cod&quot;:200}" mimeType="application/json">
+                <mock:inbound-properties>
+                    <mock:inbound-property key="http.status" value="#[200]"/>
+                </mock:inbound-properties>
+            </mock:then-return>
+        </mock:when>
+        <munit:set payload="{&quot;Header&quot; : [&quot;name&quot;,&quot;lastName&quot;,&quot;dateTime&quot;,&quot;city&quot;,&quot;country&quot;],&quot;Items&quot; : [&quot;John&quot;,&quot;Smith&quot;,&quot;31012019T1900Z&quot;, &quot;Australia&quot;,&quot;Melbourne&quot;]}" mimeType="application/json" doc:name="Set Message">
+            <munit:invocation-properties>
+                <munit:invocation-property key="path" value="#['?q=Melbourne,AU&amp;APPID=ad8a980995b3b641b5399fde6640d6ea&amp;units=metric']"/>
+            </munit:invocation-properties>
+        </munit:set>
+        <flow-ref name="post:/weather/details:apiConfig" doc:name="Flow-ref to post:/weather/search:apiConfig"/>
+        <munit:assert-on-equals expectedValue="#[200]" actualValue="#[message.inboundProperties.'http.status']" doc:name="Assert Equals" message="Success!"/>
+    </munit:test>
+ <munit:test name="mule-weather-details-api-test-suite-failure" description="Test" ignore="true">
+        <mock:when doc:name="Mock-HTTP Requester" messageProcessor=".*:.*">
+            <mock:with-attributes>
+                <mock:with-attribute name="doc:name" whereValue="#['getWeatherDetails']"/>
+            </mock:with-attributes>
+            <mock:then-return payload="{&quot;coord&quot;:{&quot;lon&quot;:-81.14,&quot;lat&quot;:22.5},&quot;weather&quot;:[{&quot;id&quot;:803,&quot;main&quot;:&quot;Clouds&quot;,&quot;description&quot;:&quot;broken clouds&quot;,&quot;icon&quot;:&quot;04n&quot;}],&quot;base&quot;:&quot;stations&quot;,&quot;main&quot;:{&quot;temp&quot;:23,&quot;feels_like&quot;:27.19,&quot;temp_min&quot;:23,&quot;temp_max&quot;:23,&quot;pressure&quot;:1015,&quot;humidity&quot;:100},&quot;visibility&quot;:8000,&quot;wind&quot;:{&quot;speed&quot;:1.5,&quot;deg&quot;:150},&quot;clouds&quot;:{&quot;all&quot;:75},&quot;dt&quot;:1577072445,&quot;sys&quot;:{&quot;type&quot;:1,&quot;id&quot;:7254,&quot;country&quot;:&quot;CU&quot;,&quot;sunrise&quot;:1577016026,&quot;sunset&quot;:1577054737},&quot;timezone&quot;:-18000,&quot;id&quot;:3556437,&quot;name&quot;:&quot;Australia&quot;,&quot;cod&quot;:200}" mimeType="application/json">
+                <mock:inbound-properties>
+                    <mock:inbound-property key="http.status" value="#[400]"/>
+                </mock:inbound-properties>
+            </mock:then-return>
+        </mock:when>
+        <munit:set payload="{&quot;Header&quot; : [&quot;name&quot;,&quot;lastName&quot;,&quot;dateTime&quot;,&quot;city&quot;,&quot;country&quot;],&quot;Items&quot; : [&quot;John&quot;,&quot;Smith&quot;,&quot;31012019T1900Z&quot;, &quot;Australia&quot;,&quot;Melbourne&quot;]}" mimeType="application/json" doc:name="Set Message">
+            <munit:invocation-properties>
+                <munit:invocation-property key="path" value="#['?q=Melbourne,AU&amp;APPID=ad8a980995b3b641b5399fde6640d6ea&amp;units=metric']"/>
+            </munit:invocation-properties>
+        </munit:set>
+        <flow-ref name="post:/weather/details:apiConfig" doc:name="Flow-ref to post:/weather/search:apiConfig"/>
+        <munit:assert-on-equals expectedValue="#[400]" actualValue="#[message.inboundProperties.'http.status']" doc:name="Assert Equals" message="Faliure!"/>
+    </munit:test>
+</mule>

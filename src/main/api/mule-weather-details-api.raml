@@ -1,0 +1,53 @@
+#%RAML 1.0
+version: v1
+baseUri: http://localhost:8081/api
+title: weather detatils API
+
+traits:
+  commonHeaders:
+   headers:
+     X-Transaction-ID:
+      required: true
+      type: string
+      example:
+        1d066b50-2395-11e9-b87e-e2338e7f9809
+
+/weather:
+
+ /details:
+  description: Retrieve weather details by City name
+  post:
+    is: [commonHeaders]
+    body:
+      application/json:
+         example: !include request/search-weather-details-request.json
+
+    responses:
+      200:
+        body:
+          application/json:
+            #example: !include response/CreateMotorQuoteHeaderResponse.json
+            
+            
+      400:
+        description: BadRequest - The request has not been accepted for processing.
+        body:
+          application/json:
+           
+      405:
+        description: Method not allowed  
+        body:
+          application/json:
+                  
+      404:
+        description: Backend Services is not configured or The requested resource could not be found.
+        body:
+          application/json:
+      500:
+        description: Internal Server Error -given that when an unexpected condition was encountered and no more specific message is suitable. 
+        body:
+          application/json:
+      415:
+        description: Unsupported Media Type.
+        body:
+          application/json:
