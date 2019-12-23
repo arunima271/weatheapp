@@ -65,7 +65,7 @@ http://www.mulesoft.org/schema/mule/secure-property-placeholder http://www.mules
 "offfSet" : offset,
 "fullName" : flowVars.originalPayload.name ++ " " ++ flowVars.originalPayload.lastName ,
 "temperatureCelcius" :payload.main.temp,
-"dateTime" : ((now as :datetime {format: "YYYY-MM-DDThh:mm:ss"}  >> (offset as :timezone )) ),
+"dateTime" : ((now as :datetime {format: "YYYY-MM-DDThh:mm:ss"}  >> (offset as :timezone )) ) + |P1D|,
 "city" : flowVars.originalPayload.country,
 "location":flowVars.originalPayload.city
 }]]></dw:set-payload>

@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
         <spring:import resource="classpath:mule-weather-details-api.xml"/>
         <spring:import resource="classpath:common.xml"/>
     </spring:beans>
-    <munit:test name="mule-weather-details-api-test-suite-success" description="Test" ignore="true">
+    <munit:test name="mule-weather-details-api-test-suite-success" description="Test" >
         <mock:when doc:name="Mock-HTTP Requester" messageProcessor=".*:.*">
             <mock:with-attributes>
                 <mock:with-attribute name="doc:name" whereValue="#['getWeatherDetails']"/>
@@ -28,7 +28,7 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
         <flow-ref name="post:/weather/details:apiConfig" doc:name="Flow-ref to post:/weather/search:apiConfig"/>
         <munit:assert-on-equals expectedValue="#[200]" actualValue="#[message.inboundProperties.'http.status']" doc:name="Assert Equals" message="Success!"/>
     </munit:test>
- <munit:test name="mule-weather-details-api-test-suite-failure" description="Test" ignore="true">
+ <munit:test name="mule-weather-details-api-test-suite-failure" description="Test" >
         <mock:when doc:name="Mock-HTTP Requester" messageProcessor=".*:.*">
             <mock:with-attributes>
                 <mock:with-attribute name="doc:name" whereValue="#['getWeatherDetails']"/>
